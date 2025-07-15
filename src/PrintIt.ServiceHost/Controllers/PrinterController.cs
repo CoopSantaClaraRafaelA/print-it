@@ -1,5 +1,9 @@
+using System;
 using Microsoft.AspNetCore.Mvc;
 using PrintIt.Core;
+using PrintIt.Core.Decorators;
+using PrintIt.Core.Utils.Logger;
+using Serilog;
 
 namespace PrintIt.ServiceHost.Controllers
 {
@@ -18,7 +22,9 @@ namespace PrintIt.ServiceHost.Controllers
         [Route("list")]
         public IActionResult ListPrinters()
         {
-            string[] installedPrinters = _printerService.GetInstalledPrinters();
+            var printerService = new LoggerPrinterServiceDecorator(_printerService, new FileLoggerCustom("General", Guid.NewGuid()));
+
+            string[] installedPrinters = printerService.GetInstalledPrinters();
             return Ok(installedPrinters);
         }
         

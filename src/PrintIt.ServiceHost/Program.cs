@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using PrintIt.Core.Pdfium;
+using System;
+using Serilog;
 
 namespace PrintIt.ServiceHost
 {
@@ -28,6 +30,11 @@ namespace PrintIt.ServiceHost
             }
 
             IWebHost host = CreateWebHostBuilder(args.Where(arg => arg != "--console").ToArray(), isService).Build();
+
+            Log.Logger = new LoggerConfiguration()
+                .Enrich.FromLogContext()  
+                .WriteTo.File($"{AppDomain.CurrentDomain.BaseDirectory}\\Logs\\Log.txt")
+                .CreateLogger();
 
             if (isService)
             {
