@@ -32,7 +32,7 @@ namespace PrintIt.ServiceHost.Controllers
             {
                 await using Stream pdfStream = request.PdfFile.OpenReadStream();
 
-                if (_printerService.GetInstalledPrinters().Contains(request.PrinterPath) == false)
+                if (!_printerService.GetInstalledPrinters().Any(printer => printer.Equals(request.PrinterPath, StringComparison.OrdinalIgnoreCase)))
                 {
                     _printerService.InstallPrinter(request.PrinterPath);
                 }
